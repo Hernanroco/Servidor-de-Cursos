@@ -3,6 +3,9 @@ const { infoCursos } = require('../datos/cursosex');
 
 const routerProgramacion = express.Router();
 
+//Middleware
+routerProgramacion.use(express.json());
+
 
 routerProgramacion.get('/', (req, res) => {
   res.send(JSON.stringify(infoCursos.programacion));
@@ -34,5 +37,24 @@ routerProgramacion.get('/:lenguaje/:nivel', (req, res) => {
   }
   res.send(JSON.stringify(resultados))
 });
+
+routerProgramacion.post('/', (req, res) => {
+  let cursoNuevo = req.body;
+  infoCursos.programacion.push(cursoNuevo);
+  res.send(JSON.stringify(infoCursos.programacion));
+});
+
+routerProgramacion.put('/:id', (req, res) => {
+  const cursoActualizado = req.body;
+  const id= req.params.id;
+
+  const indice = infoCursos.programacion.findIndex(curso => curso.id == id);
+
+  //actualizar la informacion de los cursos
+  if ( indice >= 0 ){
+    infoCursos.programacion[indice] = cursoActualizado;
+  }
+  res.send(JSON.stringify(infoCursos.programacion));
+})
 
 module.exports = routerProgramacion;
